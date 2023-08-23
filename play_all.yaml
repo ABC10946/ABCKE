@@ -1,0 +1,7 @@
+- import_playbook: apt_upgrade.yaml
+- import_playbook: preconfig.yaml
+- import_playbook: containerd_install.yaml
+- import_playbook: kubernetes_install.yaml
+
+- import_playbook: docker_install.yaml
+- import_playbook: vtm_install.yaml

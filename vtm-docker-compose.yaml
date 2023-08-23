@@ -1,0 +1,10 @@
+version: '3'
+services:
+  vtm:
+    image: pulsesecure/vtm
+    environment:
+      - ZEUS_EULA=accept
+      - ZEUS_PASS=hoge
+    network_mode: host
+    init: true
+    privileged: true

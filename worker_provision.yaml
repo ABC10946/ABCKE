@@ -1,0 +1,10 @@
+- hosts: worker
+  become: yes
+  tasks:
+    - name: create print join command
+      shell: kubeadm token create --print-join-command
+      register: kubeadm_join_cmd
+      delegate_to: 192.168.3.91
+    - name: join node
+      command: "{{ kubeadm_join_cmd.stdout }}"
+

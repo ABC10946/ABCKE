@@ -1,0 +1,11 @@
+- hosts: vtm
+  become: yes
+  tasks:
+    - name: copy docker-compose.yaml
+      copy:
+        src: vtm-docker-compose.yaml
+        dest: /home/ansible/docker-compose.yaml
+    - name: run docker-compose
+      command: docker compose up -d
+      args:
+        chdir: /home/ansible/

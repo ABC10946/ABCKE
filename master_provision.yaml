@@ -1,0 +1,24 @@
+- hosts: master
+  become: yes
+  tasks:
+    - name: kubeadm init
+      command: kubeadm init --control-plane-endpoint 192.168.3.5 --pod-network-cidr 10.8.0.0/16
+    - name: deploy cni plugin
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+    - name: get cni custom resource
+      get_url:
+        url: https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/custom-resources.yaml
+        dest: /home/ansible/custom-resources.yaml
+    - name: edit custom-resources.yaml
+      command: sed -i "s/192.168.0.0/10.8.0.0/" /home/ansible/custom-resources.yaml
+    - name: deploy custom resource
+      command: kubectl create -f /home/ansible/custom-resources.yaml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+    - name: get kubeconfig to localhost
+      fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/abc/.kube/config
+        flat: yes

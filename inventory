@@ -1,0 +1,10 @@
+[master]
+master1 ansible_host=192.168.3.91
+[worker]
+worker1 ansible_host=192.168.3.92
+worker2 ansible_host=192.168.3.93
+[vtm]
+vtm ansible_host=192.168.3.94
+
+[all:vars]
+ansible_user=ansible
