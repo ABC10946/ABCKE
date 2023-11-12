@@ -1,7 +1,0 @@
-- hosts: all
-  become: yes
-  tasks:
-    - name: ansible host
-      hostname:
-        name: "{{ inventory_hostname }}"
-        use: systemd

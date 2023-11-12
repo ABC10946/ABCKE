@@ -1,10 +1,12 @@
 [master]
-master1 ansible_host=192.168.3.91
+k8s-master1.element
+[master-join]
+# k8s-master2.element
+k8s-master3.element
 [worker]
-worker1 ansible_host=192.168.3.92
-worker2 ansible_host=192.168.3.93
-[vtm]
-vtm ansible_host=192.168.3.94
+k8s-worker1.element
+k8s-worker2.element
+k8s-worker3.element
 
 [all:vars]
-ansible_user=ansible
+ansible_user=admin

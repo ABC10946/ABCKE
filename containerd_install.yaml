@@ -1,5 +1,5 @@
 - name: containerd install
-  hosts: master, worker
+  hosts: all
   become: yes
   tasks:
   - name: docker prerequirement install
@@ -23,23 +23,23 @@
   - name: get cni plugins
     get_url:
       url: https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz
-      dest: /home/ansible/cni-plugins-linux-amd64-v1.3.0.tgz
+      dest: /home/admin/cni-plugins-linux-amd64-v1.3.0.tgz
   - name: mkdir cni plugins directory
     file:
       path: /opt/cni/bin
       state: directory
   - name: install cni plugins
     unarchive:
-      src: /home/ansible/cni-plugins-linux-amd64-v1.3.0.tgz
+      src: /home/admin/cni-plugins-linux-amd64-v1.3.0.tgz
       dest: /opt/cni/bin
       remote_src: yes
   - name: nerdctl download
     get_url:
       url: https://github.com/containerd/nerdctl/releases/download/v1.5.0/nerdctl-1.5.0-linux-amd64.tar.gz
-      dest: /home/ansible/nerdctl-1.5.0-linux-amd64.tar.gz
+      dest: /home/admin/nerdctl-1.5.0-linux-amd64.tar.gz
   - name: install nerdctl
     unarchive:
-      src: /home/ansible/nerdctl-1.5.0-linux-amd64.tar.gz
+      src: /home/admin/nerdctl-1.5.0-linux-amd64.tar.gz
       dest: /usr/local/bin/
       remote_src: yes
   - name: generate config.toml
