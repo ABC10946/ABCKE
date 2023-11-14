@@ -1,0 +1,43 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: install prerequirements
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gpg
+        update_cache: yes
+    - name: add apt key for google repos
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    - name: add repos to sources
+      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+      #      apt_key:
+      #        url: https://dl.k8s.io/apt/doc/apt-key.gpg
+      #        keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      #        state: present
+      #    - name: add google repos to apt sources
+      #      apt_repository:
+      #        repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /'
+      #        state: present
+
+    - name: apt install kubernetes
+      apt:
+        name:
+          - kubelet=1.28.2-1.1
+          - kubeadm=1.28.2-1.1
+          - kubectl=1.28.2-1.1
+        update_cache: yes
+    - name: apt mark hold kubelet
+      dpkg_selections:
+        name: kubelet
+        selection: hold
+    - name: apt mark hold kubeadm
+      dpkg_selections:
+        name: kubeadm
+        selection: hold
+    - name: apt mark hold kubectl
+      dpkg_selections:
+        name: kubectl
+        selection: hold
