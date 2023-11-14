@@ -1,0 +1,38 @@
+#cloud-config
+hostname: ${hostname}
+users:
+  - default
+  - name: admin
+    primary_group: sudo
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+FSXS0bBdx/+f5CqC1ecoXCg83/drtEnjutFLCf4Ao abc@einsteinium
+%{ if nodetype == "vtm" ~}
+apt:
+  sources:
+    docker.list:
+      source: "deb https://download.docker.com/linux/ubuntu focal stable"
+      keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+write_files:
+  - path: /home/admin/docker-compose.yaml
+    content: |
+      services:
+        vtm:
+          image: pulsesecure/vtm
+          container_name: vtm_lb
+          environment:
+            ZEUS_EULA: accept
+            ZEUS_PASS: hoge
+          network_mode: "host"
+          privileged: true
+          restart: unless-stopped
+runcmd:
+  - [sh, -c, "cd /home/admin && docker compose build && docker compose up -d"]
+%{ endif ~}
