@@ -2,3 +2,6 @@
 - import_playbook: preconfig.yaml
 - import_playbook: containerd_install.yaml
 - import_playbook: kubernetes_install.yaml
+- import_playbook: master_provision.yaml
+- import_playbook: master_join.yaml
+- import_playbook: worker_provision.yaml
