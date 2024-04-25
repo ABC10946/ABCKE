@@ -55,7 +55,7 @@ resource "proxmox_vm_qemu" "vm" {
 	ipconfig0 = "ip=${each.value.ipaddr}/24,gw=${var.gw}"
 	scsihw      = "virtio-scsi-pci"
 	disk {
-		size    = "10G"
+		size    = each.value.disk_size
 		storage = "local-lvm"
 		type    = "scsi"
 		iothread = 0

@@ -21,8 +21,10 @@ variable "nodes" {
 		hostname = string
 		ipaddr = string
 		memory_size = number
+		disk_size = string
 	}))
-	default = []
+	default = [
+	]
 }
 
 variable "nodetype" {
