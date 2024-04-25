@@ -19,4 +19,9 @@
         dest: /etc/sysctl.d/k8s.conf
     - name: apply kernel parameter
       command: sysctl --system
-
+    - name: apply NetworkManager config
+      copy:
+        src: ./etc/NetworkManager/conf.d/calico.conf
+        dest: /etc/NetworkManager/conf.d/calico.conf
+      # TODO: NetworkManagerの存在確認を追加する。
+      
