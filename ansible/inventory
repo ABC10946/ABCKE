@@ -7,6 +7,8 @@ k8s-master3.element
 k8s-worker1.element
 k8s-worker2.element
 k8s-worker3.element
+einsteinium.element ansible_port=59701 ansible_user=abc
+oxygen.element ansible_port=58543 ansible_user=taisei
 
 [all:vars]
 ansible_user=admin
