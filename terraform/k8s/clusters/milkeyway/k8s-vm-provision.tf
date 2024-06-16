@@ -14,12 +14,6 @@ module "k8s-vega" {
 			memory_size = 4096
 			disk_size = "10G"
 		}, 
-		{
-			hostname = "k8s-master3"
-			ipaddr = "192.168.10.93"
-			memory_size = 4096
-			disk_size = "10G"
-		}
 	]
 }
 
@@ -44,6 +38,18 @@ module "k8s-jupiter" {
 			ipaddr = "192.168.10.103"
 			memory_size = 8192
 			disk_size = "50G"
+		},
+		{
+			hostname = "k8s-master3"
+			ipaddr = "192.168.10.93"
+			memory_size = 4096
+			disk_size = "10G"
+		},
+		{
+			hostname = "k8s-master4"
+			ipaddr = "192.168.10.94"
+			memory_size = 4096
+			disk_size = "10G"
 		}
 	]
 }

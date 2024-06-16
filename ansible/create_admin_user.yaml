@@ -1,0 +1,13 @@
+#  terraformで作られていないホストをクラスタに参加させる場合に使うplaybook
+- hosts: all
+  become: yes
+  tasks:
+    - name: create admin user
+      user:
+        name: admin
+        password: "{{ admin_password | password_hash('sha512') }}" # admin_passwordはansible-playbookコマンドの引数で指定する # ansible-playbook create_admin_user.yaml --extra-vars "admin_password=your_password"
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        state: present
+        update_password: on_create

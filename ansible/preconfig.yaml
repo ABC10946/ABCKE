@@ -19,6 +19,11 @@
         dest: /etc/sysctl.d/k8s.conf
     - name: apply kernel parameter
       command: sysctl --system
+    - name: make directory for NetworkManager
+      file:
+        path: /etc/NetworkManager/conf.d
+        state: directory
+        mode: '0755'
     - name: apply NetworkManager config
       copy:
         src: ./etc/NetworkManager/conf.d/calico.conf
