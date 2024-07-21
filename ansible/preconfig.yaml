@@ -1,6 +1,8 @@
 - hosts: all
   become: yes
   tasks:
+    - name: make swap off
+      command: swapoff -a
     - name: /etc/modules-load.d/k8s.conf
       copy:
         src: ./etc/modules-load.d/k8s.conf
