@@ -18,14 +18,17 @@ provider "vtm" {
 resource "vtm_pool" "k8s-master-lb-pool" {
 	name = "k8s-master-lb-pool"
 	monitors = ["Ping"]
-	nodes_table {
-		node = "k8s-master1.element:6443"
-	}
+#	nodes_table {
+#		node = "k8s-master1.element:6443"
+#	}
 	nodes_table {
 		node = "k8s-master2.element:6443"
 	}
 	nodes_table {
 		node = "k8s-master3.element:6443"
+	}
+	nodes_table {
+		node = "k8s-master4.element:6443"
 	}
 }
 
