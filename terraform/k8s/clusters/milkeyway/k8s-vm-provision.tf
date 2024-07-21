@@ -2,12 +2,12 @@ module "k8s-vega" {
 	source = "../../modules/proxmox/vm"
 	proxmox_host = "vega.element"
 	nodes = [
-		{
-			hostname = "k8s-master1"
-			ipaddr = "192.168.10.91"
-			memory_size = 4096
-			disk_size = "10G"
-		},
+#		{
+#			hostname = "k8s-master1"
+#			ipaddr = "192.168.10.91"
+#			memory_size = 4096
+#			disk_size = "10G"
+#		},
 		{
 			hostname = "k8s-master2"
 			ipaddr = "192.168.10.92"
