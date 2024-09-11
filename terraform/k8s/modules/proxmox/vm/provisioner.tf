@@ -54,11 +54,25 @@ resource "proxmox_vm_qemu" "vm" {
 
 	ipconfig0 = "ip=${each.value.ipaddr}/24,gw=${var.gw}"
 	scsihw      = "virtio-scsi-pci"
-	disk {
-		size    = each.value.disk_size
-		storage = "local-lvm"
-		type    = "scsi"
-		iothread = 0
+	disks {
+		ide {
+			ide3 {
+				cloudinit {
+					storage = "local-lvm"
+				}
+			}
+		}
+		scsi {
+			scsi0 {
+				disk {
+					size = each.value.disk_size
+					storage = "local-lvm"
+					iothread = false
+					replicate = true
+					backup = false
+				}
+			}
+		}
 	}
 
 	network {
