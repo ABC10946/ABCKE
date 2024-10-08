@@ -1,13 +1,13 @@
 [master]
-k8s-master1.element
+k8s-master1.local
 [master-join]
-k8s-master2.element
-k8s-master3.element
+k8s-master2.local
+k8s-master3.local
 [worker]
-k8s-worker1.element
-k8s-worker2.element
-k8s-worker3.element
-# einsteinium.element ansible_port=59701 ansible_user=abc
+k8s-worker1.local
+k8s-worker2.local
+k8s-worker3.local
+# einsteinium.local ansible_port=59701 ansible_user=abc
 
 [all:vars]
 ansible_user=admin
