@@ -10,9 +10,9 @@
           - gpg
         update_cache: yes
     - name: add apt key for google repos
-      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
     - name: add repos to sources
-      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
       #      apt_key:
       #        url: https://dl.k8s.io/apt/doc/apt-key.gpg
       #        keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -25,9 +25,9 @@
     - name: apt install kubernetes
       apt:
         name:
-          - kubelet=1.28.2-1.1
-          - kubeadm=1.28.2-1.1
-          - kubectl=1.28.2-1.1
+          - kubelet=1.31.1-1.1
+          - kubeadm=1.31.1-1.1
+          - kubectl=1.31.1-1.1
         update_cache: yes
     - name: apt mark hold kubelet
       dpkg_selections:
