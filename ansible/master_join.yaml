@@ -4,12 +4,12 @@
   tasks:
     - name: upload certificate-key
       shell: kubeadm init phase upload-certs --upload-certs
-      delegate_to: k8s-master2.element
+      delegate_to: k8s-master1.element
       register: cert_key_raw
     - name: get join command
       shell: "kubeadm token create --print-join-command --certificate-key {{ cert_key_raw.stdout.split('\n')[-1] }}"
       register: join_command
-      delegate_to: k8s-master2.element
+      delegate_to: k8s-master1.element
     - name: kubeadm join
       shell: "{{ join_command.stdout }}"
 
