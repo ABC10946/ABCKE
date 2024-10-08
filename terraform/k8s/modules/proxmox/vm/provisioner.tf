@@ -42,7 +42,7 @@ resource "proxmox_vm_qemu" "vm" {
 	vmid = tonumber(regex("\\d*$", "${each.value.ipaddr}")) + 1000
 
 	name = "${each.value.hostname}"
-	target_node = trimsuffix(var.proxmox_host, ".element")
+	target_node = trimsuffix(var.proxmox_host, ".local")
 	clone = "ubuntu-template"
 	onboot = true
 	qemu_os = "other"
@@ -54,6 +54,9 @@ resource "proxmox_vm_qemu" "vm" {
 
 	ipconfig0 = "ip=${each.value.ipaddr}/24,gw=${var.gw}"
 	scsihw      = "virtio-scsi-pci"
+	nameserver = "192.168.10.140"
+	searchdomain = "local"
+
 	disks {
 		ide {
 			ide3 {

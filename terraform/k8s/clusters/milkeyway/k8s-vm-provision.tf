@@ -1,6 +1,6 @@
 module "k8s-magnesium" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "magnesium.element"
+	proxmox_host = "magnesium.local"
 	nodes = [
 		{
 			hostname = "k8s-master1"
@@ -19,7 +19,7 @@ module "k8s-magnesium" {
 
 module "k8s-neptune" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "neptune.element"
+	proxmox_host = "neptune.local"
 	nodes = [
 		{
 			hostname = "k8s-master2"
@@ -38,7 +38,7 @@ module "k8s-neptune" {
 
 module "k8s-uranus" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "uranus.element"
+	proxmox_host = "uranus.local"
 	nodes = [
  		{
  			hostname = "k8s-master3"
@@ -57,7 +57,7 @@ module "k8s-uranus" {
 
 module "k8s-vtm1" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "magnesium.element"
+	proxmox_host = "magnesium.local"
 	nodetype = "vtm"
 	nodes = [
 		{
@@ -71,7 +71,7 @@ module "k8s-vtm1" {
 
 module "k8s-vtm2" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "neptune.element"
+	proxmox_host = "neptune.local"
 	nodetype = "vtm"
 	nodes = [
 		{
