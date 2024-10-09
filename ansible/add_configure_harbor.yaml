@@ -1,0 +1,17 @@
+- name: add harbor containerd configuration
+  hosts: all
+  become: yes
+  tasks:
+  - name: make directory for harbor
+    file:
+      path: /etc/containerd/certs.d/harbor.k8s.local
+      state: directory
+  - name: copy harbor configuration file
+    copy:
+      src: ./etc/containerd/certs.d/harbor.k8s.local/hosts.toml
+      dest: /etc/containerd/certs.d/harbor.k8s.local/hosts.toml
+  - name: restart containerd
+    systemd:
+      state: restarted
+      daemon_reload: true
+      name: containerd

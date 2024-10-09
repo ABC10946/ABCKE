@@ -42,8 +42,10 @@
       src: /home/admin/nerdctl-1.5.0-linux-amd64.tar.gz
       dest: /usr/local/bin/
       remote_src: yes
-  - name: generate config.toml
-    shell: containerd config default > /etc/containerd/config.toml
+  - name: copy config.toml
+    copy:
+      src: ./etc/containerd/config.toml
+      dest: /etc/containerd/config.toml
   - name: config for systemd cgroup driver
     command: sed -i "s/SystemdCgroup = false/SystemdCgroup = true/" /etc/containerd/config.toml
   - name: systemd restart containerd
