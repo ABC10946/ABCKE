@@ -11,8 +11,8 @@ module "k8s-magnesium" {
 		{
 			hostname = "k8s-worker1"
 			ipaddr = "192.168.10.101"
-			memory_size = 16384
-			disk_size = "10G"
+			memory_size = 20480
+			disk_size = "40G"
 		},
 	]
 }
@@ -30,8 +30,8 @@ module "k8s-neptune" {
 		{
 			hostname = "k8s-worker2"
 			ipaddr = "192.168.10.102"
-			memory_size = 16384
-			disk_size = "10G"
+			memory_size = 20480
+			disk_size = "40G"
 		},
 	]
 }
@@ -49,8 +49,8 @@ module "k8s-uranus" {
 		{
 			hostname = "k8s-worker3"
 			ipaddr = "192.168.10.103"
-			memory_size = 16384
-			disk_size = "10G"
+			memory_size = 20480
+			disk_size = "40G"
 		},
 	]
 }
