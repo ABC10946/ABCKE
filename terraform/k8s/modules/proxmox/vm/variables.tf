@@ -22,6 +22,7 @@ variable "nodes" {
 		ipaddr = string
 		memory_size = number
 		disk_size = string
+		cores = number
 	}))
 	default = [
 	]

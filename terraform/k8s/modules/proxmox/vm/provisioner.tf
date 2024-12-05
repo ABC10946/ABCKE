@@ -46,7 +46,7 @@ resource "proxmox_vm_qemu" "vm" {
 	clone = "ubuntu-template"
 	onboot = true
 	qemu_os = "other"
-	cores = 2
+	cores = "${each.value.cores}"
 
 	cicustom = "user=local:snippets/cloud-config-${each.value.hostname}.yaml"
 

@@ -7,12 +7,14 @@ module "k8s-magnesium" {
 			ipaddr = "192.168.10.91"
 			memory_size = 4096
 			disk_size = "10G"
+			cores = 2
 		},
 		{
 			hostname = "k8s-worker1"
 			ipaddr = "192.168.10.101"
 			memory_size = 20480
 			disk_size = "40G"
+			cores = 4
 		},
 	]
 }
@@ -26,12 +28,14 @@ module "k8s-neptune" {
 			ipaddr = "192.168.10.92"
 			memory_size = 4096
 			disk_size = "10G"
+			cores = 2
 		}, 
 		{
 			hostname = "k8s-worker2"
 			ipaddr = "192.168.10.102"
 			memory_size = 20480
 			disk_size = "40G"
+			cores = 4
 		},
 	]
 }
@@ -45,12 +49,14 @@ module "k8s-uranus" {
  			ipaddr = "192.168.10.93"
  			memory_size = 4096
  			disk_size = "10G"
+			cores = 2
  		},
 		{
 			hostname = "k8s-worker3"
 			ipaddr = "192.168.10.103"
 			memory_size = 20480
 			disk_size = "40G"
+			cores = 4
 		},
 	]
 }
@@ -65,6 +71,7 @@ module "k8s-vtm1" {
 			ipaddr = "192.168.10.51"
 			memory_size = 2048
 			disk_size = "10G"
+			cores = 2
 		}
 	]
 }
@@ -79,6 +86,7 @@ module "k8s-vtm2" {
 			ipaddr = "192.168.10.52"
 			memory_size = 2048
 			disk_size = "10G"
+			cores = 2
 		}
 	]
 }
