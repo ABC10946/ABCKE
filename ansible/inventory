@@ -8,6 +8,7 @@ k8s-worker1.local
 k8s-worker2.local
 k8s-worker3.local
 # einsteinium.local ansible_port=59701 ansible_user=abc
+americium.local
 
 [all:vars]
 ansible_user=admin
