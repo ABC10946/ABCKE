@@ -1,7 +1,12 @@
 - hosts: all
   become: yes
   tasks:
-    - name: install prerequirements
+    - name: bootstrap dnf Python bindings on Fedora
+      raw: dnf install -y python3-libdnf5
+      changed_when: false
+      when: "'fedora' in group_names"
+
+    - name: install Kubernetes prerequisites on Debian
       apt:
         name:
           - apt-transport-https
@@ -9,35 +14,97 @@
           - curl
           - gpg
         update_cache: yes
-    - name: add apt key for google repos
-      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    - name: add repos to sources
-      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
-      #      apt_key:
-      #        url: https://dl.k8s.io/apt/doc/apt-key.gpg
-      #        keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-      #        state: present
-      #    - name: add google repos to apt sources
-      #      apt_repository:
-      #        repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /'
-      #        state: present
+      when: ansible_os_family == "Debian"
 
-    - name: apt install kubernetes
+    - name: create apt keyring directory
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+      when: ansible_os_family == "Debian"
+
+    - name: add Kubernetes apt key
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      when: ansible_os_family == "Debian"
+
+    - name: add Kubernetes apt repository
+      copy:
+        dest: /etc/apt/sources.list.d/kubernetes.list
+        mode: '0644'
+        content: |
+          deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /
+      when: ansible_os_family == "Debian"
+
+    - name: install Kubernetes prerequisites on Fedora
+      dnf:
+        name:
+          - ca-certificates
+          - curl
+          - gpg
+        state: present
+        update_cache: yes
+      when: ansible_distribution == "Fedora"
+
+    - name: add Kubernetes yum repository on Fedora
+      yum_repository:
+        name: kubernetes
+        description: Kubernetes repository
+        baseurl: https://pkgs.k8s.io/core:/stable:/v1.32/rpm/
+        enabled: yes
+        gpgcheck: yes
+        repo_gpgcheck: yes
+        gpgkey: https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
+        exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
+      when: ansible_distribution == "Fedora"
+
+    - name: set SELinux permissive mode on Fedora
+      ansible.posix.selinux:
+        policy: targeted
+        state: permissive
+      when: ansible_distribution == "Fedora"
+
+    - name: install Kubernetes packages on Debian
       apt:
         name:
-          - kubelet=1.31.1-1.1
-          - kubeadm=1.31.1-1.1
-          - kubectl=1.31.1-1.1
+          - kubelet=1.32.6-1.1
+          - kubeadm=1.32.6-1.1
+          - kubectl=1.32.6-1.1
         update_cache: yes
-    - name: apt mark hold kubelet
+      when: ansible_os_family == "Debian"
+
+    - name: hold kubelet on Debian
       dpkg_selections:
         name: kubelet
         selection: hold
-    - name: apt mark hold kubeadm
+      when: ansible_os_family == "Debian"
+
+    - name: hold kubeadm on Debian
       dpkg_selections:
         name: kubeadm
         selection: hold
-    - name: apt mark hold kubectl
+      when: ansible_os_family == "Debian"
+
+    - name: hold kubectl on Debian
       dpkg_selections:
         name: kubectl
         selection: hold
+      when: ansible_os_family == "Debian"
+
+    - name: install Kubernetes packages on Fedora
+      dnf:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        disable_excludes: kubernetes
+        update_cache: yes
+      when: ansible_distribution == "Fedora"
+
+    - name: enable kubelet
+      systemd:
+        name: kubelet
+        enabled: true
+      when: ansible_distribution == "Fedora"

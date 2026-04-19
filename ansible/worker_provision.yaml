@@ -4,7 +4,7 @@
     - name: create print join command
       shell: kubeadm token create --print-join-command
       register: kubeadm_join_cmd
-      delegate_to: k8s-master1.local
+      delegate_to: k8s-master1.internal
     - name: join node
       command: "{{ kubeadm_join_cmd.stdout }}"
 

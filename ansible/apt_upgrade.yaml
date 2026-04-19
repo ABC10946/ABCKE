@@ -1,7 +1,20 @@
 - hosts: all
   become: yes
   tasks:
-  - name: apt upgrade
+  - name: bootstrap dnf Python bindings on Fedora
+    raw: dnf install -y python3-libdnf5
+    changed_when: false
+    when: "'fedora' in group_names"
+
+  - name: upgrade apt packages
     apt:
       update_cache: yes
       upgrade: yes
+    when: ansible_os_family == "Debian"
+
+  - name: upgrade dnf packages
+    dnf:
+      name: "*"
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Fedora"

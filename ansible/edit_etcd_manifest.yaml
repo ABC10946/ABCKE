@@ -1,4 +1,4 @@
-- hosts: master:master-join
+- hosts: master:master_join
   become: yes
   tasks:
     - name: add node metrics listen address to etcd manifest

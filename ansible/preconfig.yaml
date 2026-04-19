@@ -8,11 +8,11 @@
         src: ./etc/modules-load.d/k8s.conf
         dest: /etc/modules-load.d/k8s.conf
     - name: modprobe kernel module overlay
-      modprobe:
+      community.general.modprobe:
         name: overlay
         state: present
     - name: modprobe kernel module br_netfilter
-      modprobe:
+      community.general.modprobe:
         name: br_netfilter
         state: present
     - name: /etc/sysctl.d/k8s.conf

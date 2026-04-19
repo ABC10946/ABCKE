@@ -1,4 +1,4 @@
-- hosts: master, worker, master-join
+- hosts: master, worker, master_join
   become: yes
   tasks:
     - name: reset kubeadm
