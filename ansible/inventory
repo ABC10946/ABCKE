@@ -1,14 +1,15 @@
 [master]
-k8s-master1.local
+k8s-master1.internal
 [master-join]
-k8s-master2.local
-k8s-master3.local
+k8s-master2.internal
+k8s-master3.internal
 [worker]
-k8s-worker1.local
-k8s-worker2.local
-k8s-worker3.local
-# einsteinium.local ansible_port=59701 ansible_user=abc
-americium.local
+k8s-worker1.internal
+k8s-worker2.internal
+k8s-worker3.internal
+# einsteinium.internal ansible_port=59701 ansible_user=abc
+americium.internal
+xenon.internal
 
 [all:vars]
 ansible_user=admin
