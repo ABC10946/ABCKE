@@ -1,0 +1,9 @@
+- hosts: master:master-join
+  become: yes
+  tasks:
+    - name: add node metrics listen address to etcd manifest
+      replace:
+        path: /etc/kubernetes/manifests/etcd.yaml
+        regexp: '^(\s*- --listen-metrics-urls=http://127\.0\.0\.1:2381)(?!,http://{{ ansible_default_ipv4.address | regex_escape }}:2381)$'
+        replace: '\1,http://{{ ansible_default_ipv4.address }}:2381'
+        backup: yes
