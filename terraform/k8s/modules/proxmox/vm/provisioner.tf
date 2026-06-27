@@ -41,20 +41,25 @@ resource "proxmox_vm_qemu" "vm" {
 	os_type = "cloud-init"
 	vmid = tonumber(regex("\\d*$", "${each.value.ipaddr}")) + 1000
 
-	name = "${each.value.hostname}"
+	name        = "${each.value.hostname}"
 	target_node = trimsuffix(var.proxmox_host, ".internal")
-	clone = "ubuntu-template"
-	onboot = true
-	qemu_os = "other"
-	cores = "${each.value.cores}"
+	clone       = "ubuntu-template"
+	start_at_node_boot        = true
+	qemu_os                   = "other"
+	cores                     = "${each.value.cores}"
 
-	cicustom = "user=local:snippets/cloud-config-${each.value.hostname}.yaml"
+	define_connection_info    = false
+	additional_wait           = 5
+	agent_timeout             = 90
+	automatic_reboot          = true
+	automatic_reboot_severity = "error"
+	clone_wait                = 10
 
-	memory = each.value.memory_size
-
-	ipconfig0 = "ip=${each.value.ipaddr}/24,gw=${var.gw}"
-	scsihw      = "virtio-scsi-pci"
-	nameserver = "192.168.10.140"
+	cicustom     = "user=local:snippets/cloud-config-${each.value.hostname}.yaml"
+	memory       = each.value.memory_size
+	ipconfig0    = "ip=${each.value.ipaddr}/24,gw=${var.gw}"
+	scsihw       = "virtio-scsi-pci"
+	nameserver   = "192.168.10.140"
 	searchdomain = "local"
 
 	disks {
@@ -82,6 +87,12 @@ resource "proxmox_vm_qemu" "vm" {
 		id     = 0
 		bridge = "vmbr0"
 		model  = "virtio"
+	}
+
+	startup_shutdown {
+		order            = -1
+		shutdown_timeout = -1
+		startup_delay    = -1
 	}
 
 	lifecycle {
