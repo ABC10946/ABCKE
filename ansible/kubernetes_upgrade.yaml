@@ -1,0 +1,32 @@
+---
+# Kubernetes クラスタバージョンアップグレード
+# バージョンは group_vars/all/kubernetes.yaml で設定する
+#
+# 実行方法:
+#   ansible-playbook -i inventory kubernetes_upgrade.yaml
+
+# Step 1: 最初のコントロールプレーンをアップグレード
+- hosts: master
+  become: yes
+  roles:
+    - role: k8s_upgrade
+      vars:
+        k8s_upgrade_type: control_plane_first
+
+# Step 2: 追加のコントロールプレーンを1台ずつアップグレード
+- hosts: master_join
+  become: yes
+  serial: 1
+  roles:
+    - role: k8s_upgrade
+      vars:
+        k8s_upgrade_type: control_plane_join
+
+# Step 3: ワーカーノードを1台ずつアップグレード
+- hosts: worker
+  become: yes
+  serial: 1
+  roles:
+    - role: k8s_upgrade
+      vars:
+        k8s_upgrade_type: worker

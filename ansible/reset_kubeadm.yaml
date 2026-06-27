@@ -1,7 +1,5 @@
-- hosts: master, worker, master_join
+---
+- hosts: master:worker:master_join
   become: yes
-  tasks:
-    - name: reset kubeadm
-      command: kubeadm reset -f
-    - name: rm cni
-      shell: rm /etc/cni/net.d/*
+  roles:
+    - kubeadm_reset

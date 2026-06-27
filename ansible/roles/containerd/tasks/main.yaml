@@ -1,0 +1,90 @@
+---
+- name: bootstrap dnf Python bindings on Fedora
+  raw: dnf install -y python3-libdnf5
+  changed_when: false
+  when: "'fedora' in group_names"
+
+- name: install Docker repository prerequisites on Debian
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker GPG apt key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker repository on Debian
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: install Docker repository prerequisites on Fedora
+  dnf:
+    name:
+      - ca-certificates
+      - curl
+      - dnf-plugins-core
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Fedora"
+
+- name: Add Docker repository on Fedora
+  get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: '0644'
+  when: ansible_distribution == "Fedora"
+
+- name: install containerd on Debian
+  apt:
+    name:
+      - containerd.io
+  when: ansible_os_family == "Debian"
+
+- name: install containerd on Fedora
+  dnf:
+    name:
+      - containerd.io
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Fedora"
+
+- name: get cni plugins
+  get_url:
+    url: https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz
+    dest: /home/admin/cni-plugins-linux-amd64-v1.3.0.tgz
+
+- name: mkdir cni plugins directory
+  file:
+    path: /opt/cni/bin
+    state: directory
+
+- name: install cni plugins
+  unarchive:
+    src: /home/admin/cni-plugins-linux-amd64-v1.3.0.tgz
+    dest: /opt/cni/bin
+    remote_src: yes
+
+- name: nerdctl download
+  get_url:
+    url: https://github.com/containerd/nerdctl/releases/download/v1.5.0/nerdctl-1.5.0-linux-amd64.tar.gz
+    dest: /home/admin/nerdctl-1.5.0-linux-amd64.tar.gz
+
+- name: install nerdctl
+  unarchive:
+    src: /home/admin/nerdctl-1.5.0-linux-amd64.tar.gz
+    dest: /usr/local/bin/
+    remote_src: yes
+
+- name: copy config.toml
+  copy:
+    src: config.toml
+    dest: /etc/containerd/config.toml
+  notify: restart containerd

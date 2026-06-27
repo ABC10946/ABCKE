@@ -1,0 +1,6 @@
+---
+- name: reset kubeadm
+  command: kubeadm reset -f
+
+- name: rm cni
+  shell: rm /etc/cni/net.d/*

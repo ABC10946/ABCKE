@@ -1,0 +1,12 @@
+---
+# Kubernetes バージョン設定
+# アップグレード時はここの3変数をまとめて更新する
+
+# フルバージョン (kubeadm upgrade apply / インストール等で使用)
+k8s_version: "1.32.13"
+
+# マイナーバージョン (リポジトリURL用)
+k8s_minor_version: "1.32"
+
+# Debian パッケージバージョン (apt install 用)
+k8s_debian_package_version: "1.32.13-1.1"

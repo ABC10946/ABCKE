@@ -1,0 +1,10 @@
+---
+- name: create admin user
+  user:
+    name: admin
+    password: "{{ admin_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+    state: present
+    update_password: on_create

@@ -1,0 +1,40 @@
+---
+- include_tasks: update_repo.yaml
+
+- name: unhold kubeadm on Debian
+  dpkg_selections:
+    name: kubeadm
+    selection: install
+  when: ansible_os_family == "Debian"
+
+- name: upgrade kubeadm on Debian
+  apt:
+    name: "kubeadm={{ k8s_debian_package_version }}"
+    update_cache: yes
+    allow_change_held_packages: yes
+  when: ansible_os_family == "Debian"
+
+- name: upgrade kubeadm on Fedora
+  dnf:
+    name: kubeadm
+    state: latest
+    update_cache: yes
+    disable_excludes: kubernetes
+  when: ansible_distribution == "Fedora"
+
+- name: drain worker node
+  command: "kubectl drain {{ inventory_hostname }} --ignore-daemonsets --delete-emptydir-data"
+  delegate_to: k8s-master1.internal
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+
+- name: kubeadm upgrade node
+  command: "kubeadm upgrade node"
+
+- include_tasks: upgrade_kubelet_kubectl.yaml
+
+- name: uncordon worker node
+  command: "kubectl uncordon {{ inventory_hostname }}"
+  delegate_to: k8s-master1.internal
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf

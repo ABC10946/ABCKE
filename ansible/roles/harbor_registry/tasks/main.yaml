@@ -1,0 +1,11 @@
+---
+- name: make directory for harbor
+  file:
+    path: /etc/containerd/certs.d/harbor.k8s.local
+    state: directory
+
+- name: copy harbor configuration file
+  copy:
+    src: hosts.toml
+    dest: /etc/containerd/certs.d/harbor.k8s.local/hosts.toml
+  notify: restart containerd

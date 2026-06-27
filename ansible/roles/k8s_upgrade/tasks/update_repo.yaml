@@ -1,0 +1,24 @@
+---
+- name: update Kubernetes apt key
+  shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ k8s_minor_version }}/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  when: ansible_os_family == "Debian"
+
+- name: update Kubernetes apt repository
+  copy:
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    mode: '0644'
+    content: |
+      deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_minor_version }}/deb/ /
+  when: ansible_os_family == "Debian"
+
+- name: update Kubernetes yum repository on Fedora
+  yum_repository:
+    name: kubernetes
+    description: Kubernetes repository
+    baseurl: https://pkgs.k8s.io/core:/stable:/v{{ k8s_minor_version }}/rpm/
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v{{ k8s_minor_version }}/rpm/repodata/repomd.xml.key
+    exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
+  when: ansible_distribution == "Fedora"

@@ -1,0 +1,35 @@
+---
+- name: upgrade kubelet and kubectl on Debian
+  apt:
+    name:
+      - "kubelet={{ k8s_debian_package_version }}"
+      - "kubectl={{ k8s_debian_package_version }}"
+    update_cache: yes
+    allow_change_held_packages: yes
+  when: ansible_os_family == "Debian"
+
+- name: hold Kubernetes packages on Debian
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+  when: ansible_os_family == "Debian"
+
+- name: upgrade kubelet and kubectl on Fedora
+  dnf:
+    name:
+      - kubelet
+      - kubectl
+    state: latest
+    update_cache: yes
+    disable_excludes: kubernetes
+  when: ansible_distribution == "Fedora"
+
+- name: restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes

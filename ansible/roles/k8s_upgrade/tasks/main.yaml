@@ -1,0 +1,2 @@
+---
+- include_tasks: "{{ k8s_upgrade_type }}.yaml"

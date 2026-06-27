@@ -42,7 +42,7 @@ resource "proxmox_vm_qemu" "vm" {
 	vmid = tonumber(regex("\\d*$", "${each.value.ipaddr}")) + 1000
 
 	name = "${each.value.hostname}"
-	target_node = trimsuffix(var.proxmox_host, ".local")
+	target_node = trimsuffix(var.proxmox_host, ".internal")
 	clone = "ubuntu-template"
 	onboot = true
 	qemu_os = "other"
@@ -79,7 +79,12 @@ resource "proxmox_vm_qemu" "vm" {
 	}
 
 	network {
+		id     = 0
 		bridge = "vmbr0"
-		model = "virtio"
+		model  = "virtio"
+	}
+
+	lifecycle {
+		ignore_changes = [clone, full_clone]
 	}
 }

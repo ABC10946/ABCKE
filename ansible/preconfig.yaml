@@ -1,34 +1,5 @@
+---
 - hosts: all
   become: yes
-  tasks:
-    - name: make swap off
-      command: swapoff -a
-    - name: /etc/modules-load.d/k8s.conf
-      copy:
-        src: ./etc/modules-load.d/k8s.conf
-        dest: /etc/modules-load.d/k8s.conf
-    - name: modprobe kernel module overlay
-      community.general.modprobe:
-        name: overlay
-        state: present
-    - name: modprobe kernel module br_netfilter
-      community.general.modprobe:
-        name: br_netfilter
-        state: present
-    - name: /etc/sysctl.d/k8s.conf
-      copy:
-        src: ./etc/sysctl.d/k8s.conf
-        dest: /etc/sysctl.d/k8s.conf
-    - name: apply kernel parameter
-      command: sysctl --system
-    - name: make directory for NetworkManager
-      file:
-        path: /etc/NetworkManager/conf.d
-        state: directory
-        mode: '0755'
-    - name: apply NetworkManager config
-      copy:
-        src: ./etc/NetworkManager/conf.d/calico.conf
-        dest: /etc/NetworkManager/conf.d/calico.conf
-      # TODO: NetworkManagerの存在確認を追加する。
-      
+  roles:
+    - preconfig

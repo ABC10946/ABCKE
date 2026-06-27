@@ -1,6 +1,6 @@
 module "k8s-magnesium" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "magnesium.local"
+	proxmox_host = "magnesium.internal"
 	nodes = [
 		{
 			hostname = "k8s-master1"
@@ -21,7 +21,7 @@ module "k8s-magnesium" {
 
 module "k8s-neptune" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "neptune.local"
+	proxmox_host = "neptune.internal"
 	nodes = [
 		{
 			hostname = "k8s-master2"
@@ -42,13 +42,13 @@ module "k8s-neptune" {
 
 module "k8s-uranus" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "uranus.local"
+	proxmox_host = "uranus.internal"
 	nodes = [
  		{
  			hostname = "k8s-master3"
  			ipaddr = "192.168.10.93"
  			memory_size = 4096
- 			disk_size = "10G"
+ 			disk_size = "40G"
 			cores = 2
  		},
 		{
@@ -63,7 +63,7 @@ module "k8s-uranus" {
 
 module "k8s-vtm1" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "magnesium.local"
+	proxmox_host = "magnesium.internal"
 	nodetype = "vtm"
 	nodes = [
 		{
@@ -78,7 +78,7 @@ module "k8s-vtm1" {
 
 module "k8s-vtm2" {
 	source = "../../modules/proxmox/vm"
-	proxmox_host = "neptune.local"
+	proxmox_host = "neptune.internal"
 	nodetype = "vtm"
 	nodes = [
 		{
