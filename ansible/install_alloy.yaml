@@ -1,0 +1,4 @@
+- hosts: log_hosts
+  become: yes
+  roles:
+    - alloy

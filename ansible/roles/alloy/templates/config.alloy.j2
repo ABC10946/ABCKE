@@ -1,0 +1,71 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+loki.write "default" {
+  endpoint {
+    url       = "{{ alloy_loki_endpoint }}"
+    tenant_id = "{{ alloy_loki_tenant_id }}"
+  }
+}
+
+// Relabel rules applied to systemd-journal entries before they're shipped.
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+}
+
+loki.source.journal "system" {
+  max_age       = "24h"
+  relabel_rules = loki.relabel.journal.rules
+  labels        = {
+    job     = "systemd-journal",
+    host    = "{{ inventory_hostname }}",
+    cluster = "{{ alloy_cluster_label }}",
+{% if 'master' in group_names or 'master_join' in group_names %}
+    role    = "k8s-master",
+{% elif 'worker' in group_names %}
+    role    = "k8s-worker",
+{% else %}
+    role    = "other",
+{% endif %}
+  }
+  forward_to    = [loki.write.default.receiver]
+}
+
+{% if alloy_collect_docker_logs %}
+// Discover and tail logs from local Docker containers.
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "docker" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+}
+
+loki.source.docker "containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.docker.output
+  labels     = {
+    job     = "docker",
+    host    = "{{ inventory_hostname }}",
+    cluster = "{{ alloy_cluster_label }}",
+  }
+  forward_to = [loki.write.default.receiver]
+}
+{% endif %}

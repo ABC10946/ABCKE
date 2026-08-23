@@ -1,0 +1,9 @@
+---
+alloy_loki_endpoint: "http://loki.k8s.internal/loki/api/v1/push"
+alloy_loki_tenant_id: "default"
+alloy_cluster_label: "home-lab"
+alloy_collect_docker_logs: false
+alloy_apt_repo_url: "https://apt.grafana.com"
+alloy_apt_gpg_key_url: "https://apt.grafana.com/gpg.key"
+alloy_rpm_repo_url: "https://rpm.grafana.com"
+alloy_rpm_gpg_key_url: "https://rpm.grafana.com/gpg.key"

@@ -14,5 +14,14 @@ xenon.internal
 [fedora]
 xenon.internal
 
+[home_dns]
+home-dns ansible_user=taisei
+
+[log_hosts:children]
+master
+master_join
+worker
+home_dns
+
 [all:vars]
 ansible_user=admin

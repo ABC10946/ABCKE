@@ -1,0 +1,90 @@
+---
+- name: bootstrap dnf Python bindings on Fedora
+  raw: dnf install -y python3-libdnf5
+  changed_when: false
+  when: "'fedora' in group_names"
+
+- name: install alloy apt prerequisites on Debian
+  apt:
+    name:
+      - ca-certificates
+      - gnupg
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: create apt keyrings directory
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  when: ansible_os_family == "Debian"
+
+- name: fetch Grafana apt GPG key
+  get_url:
+    url: "{{ alloy_apt_gpg_key_url }}"
+    dest: /tmp/grafana-gpg.key
+    mode: '0644'
+  when: ansible_os_family == "Debian"
+
+- name: dearmor Grafana apt GPG key
+  command: gpg --dearmor --yes --output /etc/apt/keyrings/grafana.gpg /tmp/grafana-gpg.key
+  args:
+    creates: /etc/apt/keyrings/grafana.gpg
+  when: ansible_os_family == "Debian"
+
+- name: add Grafana apt repository
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] {{ alloy_apt_repo_url }} stable main"
+    filename: grafana
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: install alloy on Debian
+  apt:
+    name: alloy
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: add Grafana rpm repository
+  yum_repository:
+    name: grafana
+    description: grafana
+    baseurl: "{{ alloy_rpm_repo_url }}"
+    gpgcheck: yes
+    gpgkey: "{{ alloy_rpm_gpg_key_url }}"
+    repo_gpgcheck: yes
+    enabled: yes
+  when: ansible_os_family == "RedHat"
+
+- name: install alloy on Fedora/RedHat
+  dnf:
+    name: alloy
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "RedHat"
+
+- name: add alloy user to docker group
+  user:
+    name: alloy
+    groups: docker
+    append: yes
+  when: alloy_collect_docker_logs | bool
+  notify: restart alloy
+
+- name: deploy alloy config
+  template:
+    src: config.alloy.j2
+    dest: /etc/alloy/config.alloy
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart alloy
+
+- name: enable and start alloy service
+  systemd:
+    name: alloy
+    enabled: yes
+    state: started
+    daemon_reload: yes
