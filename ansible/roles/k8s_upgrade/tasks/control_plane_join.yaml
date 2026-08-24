@@ -23,10 +23,14 @@
   when: ansible_distribution == "Fedora"
 
 - name: drain node
-  command: "kubectl drain {{ inventory_hostname }} --ignore-daemonsets --delete-emptydir-data"
+  command: "kubectl drain {{ ansible_hostname }} --ignore-daemonsets --delete-emptydir-data"
   delegate_to: k8s-master1.internal
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
+
+- name: logout iSCSI sessions after drain
+  command: iscsiadm -m session --logout
+  failed_when: false
 
 - name: kubeadm upgrade node
   command: "kubeadm upgrade node"
@@ -34,7 +38,7 @@
 - include_tasks: upgrade_kubelet_kubectl.yaml
 
 - name: uncordon node
-  command: "kubectl uncordon {{ inventory_hostname }}"
+  command: "kubectl uncordon {{ ansible_hostname }}"
   delegate_to: k8s-master1.internal
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf

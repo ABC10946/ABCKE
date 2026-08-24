@@ -6,7 +6,7 @@ module "k8s-magnesium" {
 			hostname = "k8s-master1"
 			ipaddr = "192.168.10.91"
 			memory_size = 4096
-			disk_size = "10G"
+			disk_size = "40G"
 			cores = 2
 		},
 		{
@@ -27,7 +27,7 @@ module "k8s-neptune" {
 			hostname = "k8s-master2"
 			ipaddr = "192.168.10.92"
 			memory_size = 4096
-			disk_size = "10G"
+			disk_size = "40G"
 			cores = 2
 		}, 
 		{
