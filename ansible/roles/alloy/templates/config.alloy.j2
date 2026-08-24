@@ -22,6 +22,10 @@ loki.relabel "journal" {
     source_labels = ["__journal_priority_keyword"]
     target_label  = "level"
   }
+  rule {
+    source_labels = ["__journal__transport"]
+    target_label  = "transport"
+  }
 }
 
 loki.source.journal "system" {
