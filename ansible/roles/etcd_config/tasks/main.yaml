@@ -4,4 +4,6 @@
     path: /etc/kubernetes/manifests/etcd.yaml
     regexp: '^(\s*- --listen-metrics-urls=http://127\.0\.0\.1:2381)(?!,http://{{ ansible_default_ipv4.address | regex_escape }}:2381)$'
     replace: '\1,http://{{ ansible_default_ipv4.address }}:2381'
-    backup: yes
+    # backup: no - kubeletは/etc/kubernetes/manifests/内の全ファイルを静的Pod
+    # マニフェスト候補として読むため、ここにbackupを残すと同名Podが競合し、
+    # 古い内容でコンポーネントが起動してしまう(2026-08-29に実際に発生)

@@ -43,6 +43,15 @@
 - name: kubeadm upgrade apply
   command: "kubeadm upgrade apply v{{ k8s_version }} --yes --ignore-preflight-errors=CoreDNSUnsupportedPlugins"
 
+# kubeadm upgrade apply regenerates the control-plane static pod manifests from
+# ClusterConfiguration, which reverts the etcd/scheduler/controller-manager
+# scrape bind-address fixes below. Reapply them every time.
+- include_role:
+    name: etcd_config
+
+- include_role:
+    name: scheduler_controller_manager_config
+
 - include_tasks: upgrade_kubelet_kubectl.yaml
 
 - name: uncordon control plane node

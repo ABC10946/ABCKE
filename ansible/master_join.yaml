@@ -4,3 +4,5 @@
   serial: 1
   roles:
     - master_join
+    - etcd_config
+    - scheduler_controller_manager_config
