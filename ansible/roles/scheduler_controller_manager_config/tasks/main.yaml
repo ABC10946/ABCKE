@@ -1,0 +1,14 @@
+---
+- name: bind kube-scheduler secure port to all interfaces
+  replace:
+    path: /etc/kubernetes/manifests/kube-scheduler.yaml
+    regexp: '^(\s*- --bind-address=)127\.0\.0\.1$'
+    replace: '\g<1>0.0.0.0'
+    backup: yes
+
+- name: bind kube-controller-manager secure port to all interfaces
+  replace:
+    path: /etc/kubernetes/manifests/kube-controller-manager.yaml
+    regexp: '^(\s*- --bind-address=)127\.0\.0\.1$'
+    replace: '\g<1>0.0.0.0'
+    backup: yes

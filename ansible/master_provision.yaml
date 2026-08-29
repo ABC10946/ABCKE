@@ -3,3 +3,5 @@
   become: yes
   roles:
     - master_init
+    - etcd_config
+    - scheduler_controller_manager_config
