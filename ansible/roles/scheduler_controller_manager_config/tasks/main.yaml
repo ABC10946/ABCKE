@@ -1,14 +1,16 @@
 ---
+# backup: no - kubeletは/etc/kubernetes/manifests/内の全ファイルを静的Pod
+# マニフェスト候補として読むため、ここにbackupを残すと同名Podが競合し、
+# 古い内容でコンポーネントが起動してしまう(2026-08-29に実際に発生)
+
 - name: bind kube-scheduler secure port to all interfaces
   replace:
     path: /etc/kubernetes/manifests/kube-scheduler.yaml
     regexp: '^(\s*- --bind-address=)127\.0\.0\.1$'
     replace: '\g<1>0.0.0.0'
-    backup: yes
 
 - name: bind kube-controller-manager secure port to all interfaces
   replace:
     path: /etc/kubernetes/manifests/kube-controller-manager.yaml
     regexp: '^(\s*- --bind-address=)127\.0\.0\.1$'
     replace: '\g<1>0.0.0.0'
-    backup: yes
